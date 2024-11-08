@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn {
+    @apply flex mr-5 w-auto px-3 pt-1 h-9 border-2 border-gray-400 rounded-2xl hover:bg-gray-200 transition duration-300
+  }
+
+.btn-active {
+    @apply flex mr-5 w-auto px-3 pt-1 h-9 border-2 border-gray-400 rounded-2xl bg-gray-200;
+}
