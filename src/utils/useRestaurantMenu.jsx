@@ -1,23 +1,23 @@
 import { useEffect, useState} from 'react'
-import {restaurantMenuApi} from './constants'
+import { FOODHAVEN_API } from './constants';
 
 const useResturantMenu = (prop) =>{
     const [resInfo, setResInfo] = useState(null)
 
     useEffect(()=>{
         
-        fetch( restaurantMenuApi + prop +"&catalog_qa=undefined&submitAction=ENTER")
+        fetch(`${FOODHAVEN_API}/public/fooditems?cloudimageid=${prop}`)
         .then((resp)=>{
             if(!resp.ok)
-                return new Error("Failed ot fetch data"+ resp.statusText)
+                return new Error("Failed to fetch data"+ resp.statusText)
             else
                 return resp.json()
         })
         .then((res)=>{
-            setResInfo(res?.data?.cards)
+            setResInfo(res?.data)
         })
         .catch((err)=>{
-            console.log("Fetching data failed. " + err)
+            console.error("Fetching data failed. " + err)
         })
     },[])
 

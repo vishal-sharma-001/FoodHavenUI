@@ -15,16 +15,16 @@ const restaurantSlice = createSlice({
             priceRangelessThan300: false,
         },
         selectedCity: "",
-        cities: []
+        cities: [],
+        offers: false,
+        selectedRes: null
     },
     reducers: {
-        // Replace the entire restaurantsList with action.payload (an array)
         addRestaurants: (state, action) => {
-            state.restaurantsList = action.payload;  // Directly assign the payload
+            state.restaurantsList = action.payload;
         },
-        // Replace the entire filteredRestaurantsList with action.payload (an array)
         addFilteredRestaurants: (state, action) => {
-            state.filteredRestaurantsList = action.payload;  // Directly assign the payload
+            state.filteredRestaurantsList = action.payload;
         },
         toggleFilter: (state, action) => {
             const filterName = action.payload;
@@ -37,6 +37,10 @@ const restaurantSlice = createSlice({
         setCities : (state, action) => {
             state.cities = action.payload
         },
+        setOffer : (state, action) => {state.offers = !state.offers},
+        
+        setSelectedRes : (state, action) => {state.selectedRes = action.payload},
+
     },
 });
 
@@ -51,10 +55,10 @@ const applyFilters = (res, filters) => {
         if (filters.priceRangelessThan300 && restaurant.costfortwo >= 300) return false;
         if (filters.priceRange300To600 && (restaurant.costfortwo < 300 || restaurant.costfortwo > 600)) return false;
 
-        return true; // Include the restaurant if it passes all filters
+        return true;
     });
 };
 
-export const { addRestaurants, addFilteredRestaurants, toggleFilter, setSelectedCity, setCities} = restaurantSlice.actions;
+export const { setSelectedRes, setOffer, addRestaurants, addFilteredRestaurants, toggleFilter, setSelectedCity, setCities} = restaurantSlice.actions;
 
 export default restaurantSlice.reducer;

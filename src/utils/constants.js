@@ -1,1 +1,2 @@
-export const restaurantMenuApi = "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.7040592&lng=77.10249019999999&restaurantId="
+export const FOODHAVEN_API = "http://localhost:8080"
+export const BUCKET_PATH = "https://storage.cloud.google.com/foodhaven_bucket/Images/"
