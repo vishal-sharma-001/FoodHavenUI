@@ -155,6 +155,28 @@ const handleEditAddress = (address) => {
     }
   };
 
+    const handleLogout = async () => {
+        try {
+            const response = await fetch(`${FOODHAVEN_API}/private/user/logout`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                console.error('Logout failed:', error.message);
+                return;
+            }
+            dispatch(setAuthUser(null));
+        } catch (error) {
+            console.error('Error during logout:', error.message);
+        }
+    };
+
+
   return (
     <div className="w-screen h-screen py-6 px-40 bg-white shadow-md text-black">
         {!authUser ? (
@@ -171,10 +193,15 @@ const handleEditAddress = (address) => {
         ) : (
           <div>
             <p className="mb-2 text-4xl font-bold">{authUser?.name}</p>
-            <div className='flex font-medium'>
-                <p>{authUser?.phone}</p>
-                <p className='mx-2'>.</p>
-                <p>{authUser?.email}</p>
+            <div className='flex justify-between'>
+                <div className='flex font-medium'>
+                    <p>{authUser?.phone}</p>
+                    <p className='mx-2'>.</p>
+                    <p>{authUser?.email}</p>
+                </div>
+                <div>
+                    <button className='bg-black text-white py-2 px-4 rounded hover:bg-gray-800 mr-20' onClick={handleLogout}>Logout</button>
+                </div>
             </div>
             <div className="flex w-5/6 absolute top-60">
                 <div className="w-1/4 bg-white p-4 rounded-lg shadow-md">
