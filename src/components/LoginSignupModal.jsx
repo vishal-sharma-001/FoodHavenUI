@@ -18,7 +18,6 @@ const LoginSignupModal = ({ isOpen, onClose }) => {
                     {isLoginMode ? 'Login' : 'Sign Up'}
                 </h2>
                 <form>
-                    {/* Email Input */}
                     <div className="mb-4">
                         <label htmlFor="email" className="block text-sm font-medium text-black">
                             Email
@@ -31,7 +30,6 @@ const LoginSignupModal = ({ isOpen, onClose }) => {
                         />
                     </div>
 
-                    {/* Password Input */}
                     <div className="mb-4">
                         <label htmlFor="password" className="block text-sm font-medium text-black">
                             Password

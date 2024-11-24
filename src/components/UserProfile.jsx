@@ -178,7 +178,7 @@ const handleEditAddress = (address) => {
 
 
   return (
-    <div className="w-screen h-screen py-6 px-40 bg-white shadow-md text-black">
+    <div className="w-screen h-screen py-6 px-10 md:px-40 bg-white shadow-md text-black">
         {!authUser ? (
           <div className="flex flex-col items-center relative top-[30%]">
             <p className="text-gray-600 mb-4">Please login or signup to manage your profile.</p>
@@ -193,7 +193,7 @@ const handleEditAddress = (address) => {
         ) : (
           <div>
             <p className="mb-2 text-4xl font-bold">{authUser?.name}</p>
-            <div className='flex justify-between'>
+            <div className='flex justify-between flex-wrap gap-2'>
                 <div className='flex font-medium'>
                     <p>{authUser?.phone}</p>
                     <p className='mx-2'>.</p>
@@ -203,38 +203,38 @@ const handleEditAddress = (address) => {
                     <button className='bg-black text-white py-2 px-4 rounded hover:bg-gray-800 mr-20' onClick={handleLogout}>Logout</button>
                 </div>
             </div>
-            <div className="flex w-5/6 absolute top-60">
-                <div className="w-1/4 bg-white p-4 rounded-lg shadow-md">
-                <h2 className="text-lg font-semibold mb-4">Options</h2>
-                <ul className="space-y-4">
-                    <li>
-                    <button
-                        className={`w-full p-2 text-left rounded-lg ${activeTab === 'addresses' ? 'bg-black text-white' : 'text-black bg-gray-200'}`}
-                        onClick={() => setActiveTab('addresses')}
-                    >
-                        Addresses
-                    </button>
-                    </li>
-                    <li>
-                    <button
-                        className={`w-full p-2 text-left rounded-lg ${activeTab === 'myaccount' ? 'bg-black text-white' : 'text-black bg-gray-200'}`}
-                        onClick={() => setActiveTab('myaccount')}
-                    >
-                        My Account
-                    </button>
-                    </li>
-                </ul>
+            <div className="flex md:w-5/6 absolute md:top-60 top-96 gap-5 rounded-md md:flex-wrap">
+                <div className="md:w-1/4 bg-white p-4 rounded-lg shadow-md border-2">
+                    <h2 className="text-lg font-semibold mb-4">Options</h2>
+                    <ul className="space-y-4">
+                        <li>
+                        <button
+                            className={`w-full p-2 text-left rounded-lg ${activeTab === 'addresses' ? 'bg-black text-white' : 'text-black bg-gray-200'}`}
+                            onClick={() => setActiveTab('addresses')}
+                        >
+                            Addresses
+                        </button>
+                        </li>
+                        <li>
+                        <button
+                            className={`w-full p-2 text-left rounded-lg ${activeTab === 'myaccount' ? 'bg-black text-white' : 'text-black bg-gray-200'}`}
+                            onClick={() => setActiveTab('myaccount')}
+                        >
+                            My Account
+                        </button>
+                        </li>
+                    </ul>
                 </div>
 
-                <div className="w-3/4 ml-6 p-6 bg-white rounded-lg shadow-md">
+                <div className="p-6 bg-white rounded-lg shadow-md border-2 w-auto">
                     {activeTab === 'addresses' && (
                         <>
                         <h2 className="text-xl font-bold mb-4">Your Addresses</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 overflow-hidden">
                             {addresses.map((address) => (
                             <div
                                 key={address.id}
-                                className="w-full max-w-2xl h-56 p-6 bg-white rounded-lg shadow-md transform mb-4 overflow-hidden"
+                                className="w-full max-w-2xl h-56 p-6 bg-white rounded-lg shadow-md transform mb-4 overflow-hidden min-w-32"
                             >
                                 <h3 className="font-medium text-black mb-2">{address.name}</h3>
                                 <p className="text-sm text-gray-700">{address.street}, {address.city}</p>
@@ -318,7 +318,7 @@ const handleEditAddress = (address) => {
                 )}
             {isEditingUser && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50 p-4">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+                    <div className="bg-white p-6 rounded-lg shadow-lg min-w-60">
                     <h3 className="text-lg font-semibold mb-4 text-black">Edit User Details</h3>
                     {['name', 'phone', 'email'].map((field) => (
                         <div key={field} className="mb-4">

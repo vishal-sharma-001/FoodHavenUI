@@ -31,7 +31,7 @@ const RestaurantMenu = () => {
         return <></>
 
     return (
-        <div className="menu-ctr mx-auto w-6/12 text-center m-5">
+        <div className="menu-ctr mx-auto md:w-6/12 text-center m-5">
             <h2 className="text-3xl font-extrabold">{restaurant?.name}</h2>
             {
                 Object.keys(data).map((category, idx) => (

@@ -51,7 +51,7 @@ const Restaurants = () => {
     return (
         <div className='restaurants-ctr'>
             <h3 className="font-bold text-xl py-7">Restaurants with online food delivery in Bangalore</h3>
-            <div className='flex justify-start py-7'>
+            <div className='flex justify-start py-7 flex-wrap gap-2'>
                 <button className='btn'>Filter <CiSliderHorizontal className="text-l m-2" /></button>
                 <button className={getButtonClass('fastDelivery')} onClick={() => dispatch(toggleFilter('fastDelivery'))}> Fast Delivery </button>
                 <button className={getButtonClass('new')} onClick={() => dispatch(toggleFilter('new'))}> New </button>

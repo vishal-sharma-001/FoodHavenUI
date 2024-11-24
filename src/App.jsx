@@ -101,7 +101,7 @@ const App = () => {
     };
 
     return(
-        <div className="min-w-[1800px] min-h-[1000px] overflow-hidden pt-[80px] select-none">
+        <div className="pt-[200px] md:pt-[80px] select-none">
             <Header />
             <Outlet />
         </div>

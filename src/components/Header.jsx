@@ -46,77 +46,46 @@ const Header = () => {
     };
 
     return (
-        <div className="fixed top-0 left-0 w-full z-50 bg-white flex justify-center items-baseline pb-3 shadow-md">
-            {/* Logo */}
-            <div className="mr-20 relative top-2">
-                <Link to="/">
-                    <img
-                        className="object-cover w-[150px] h-[50px]"
-                        src={Logo}
-                        alt="FoodHaven logo"
-                    />
-                </Link>
-            </div>
-
-            {/* Location Selection */}
-            <div className="flex mr-32">
-                <IoLocationOutline className="text-2xl mr-2" id="location-icon" />
+        <div className="fixed top-0 left-0 w-screen z-50 bg-white flex flex-wrap justify-between items-center p-4 shadow-md md:flex-row flex-col">
+            <Link to="/" className="mb-2 md:mb-0">
+                <img className="object-cover w-[120px] h-[40px] md:w-[150px] md:h-[50px]" src={Logo} alt="FoodHaven logo" />
+            </Link>
+            <div className="flex items-center mb-2 md:mb-0">
+                <IoLocationOutline className="text-lg md:text-2xl mr-2" />
                 <select
-                    className="location-input w-40 p-2 border-none outline-none bg-white"
+                    className="w-32 md:w-40 p-2 border-none outline-none bg-white"
                     value={selectedCity}
                     onChange={(e) => dispatch(setSelectedCity(e.target.value))}
                 >
                     {cities.map((city) => (
-                        <option key={city} value={city}>
-                            {city}
-                        </option>
+                        <option key={city} value={city}>{city}</option>
                     ))}
                 </select>
             </div>
-
-            {/* Search Bar */}
-            <div className="flex">
-                <label htmlFor="food-search">
-                    <FaSearch className="text-xl mr-2 mt-1" id="search-icon" />
-                </label>
+            <div className="flex items-center md:w-auto mb-2 md:mb-0">
+                <FaSearch className="text-lg md:text-xl mr-2" />
                 <input
                     type="search"
-                    className="w-72 h-7 p-2 border-none outline-none"
-                    id="food-search"
+                    className="flex-grow md:flex-none w-64 h-8 p-2 border border-gray-300 rounded-md outline-none"
                     placeholder="Search..."
                     value={searchFilter}
                     onChange={(e) => setSearchFilter(e.target.value)}
                 />
             </div>
-
-            {/* User and Cart Icons */}
-            <div className="flex ml-28 justify-center items-center">
-                {/* User Icon */}
-                <div className="icons text-xl mx-16">
-                    <FaRegUserCircle
-                        onClick={handleUserIconClick}
-                        className="hover:cursor-pointer"
-                    />
-                </div>
-                {/* Signup Modal */}
-                {isSignupOpen && (
-                    <Signup isOpen={isSignupOpen} onClose={() => setIsSignupOpen(false)} />
-                )}
-
-                {/* Cart Icon */}
-                <div className="icons text-xl mx-16 flex">
-                    <Link to="/cart" className="relative">
-                        <FaShoppingCart />
-                        {totalItemCount > 0 && (
-                            <span className="absolute top-3 left-3 text-sm text-white font-bold bg-red-500 px-1 rounded-full">
-                                {totalItemCount}
-                            </span>
-                        )}
-                    </Link>
-                </div>
+            <div className="flex items-center">
+                <FaRegUserCircle onClick={handleUserIconClick} className="text-lg md:text-xl mx-4 hover:cursor-pointer" />
+                {isSignupOpen && <Signup isOpen={isSignupOpen} onClose={() => setIsSignupOpen(false)} />}
+                <Link to="/cart" className="relative mx-4">
+                    <FaShoppingCart className="text-lg md:text-xl" />
+                    {totalItemCount > 0 && (
+                        <span className="absolute top-0 right-0 text-xs text-white font-bold bg-red-500 px-1 rounded-full">
+                            {totalItemCount}
+                        </span>
+                    )}
+                </Link>
             </div>
         </div>
-    );
+    );      
 };
 
 export default Header;

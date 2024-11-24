@@ -140,9 +140,8 @@ const Cart = () => {
     }
 
     return (
-        <div className="flex justify-center items-start p-6 bg-white min-h-screen">
-            {/* Address Section */}
-            <div className="w-full sm:w-2/3 lg:w-1/2 bg-white p-6 rounded-lg shadow-lg mr-6">
+        <div className="flex justify-center items-start p-6 bg-white flex-wrap gap-3">
+            <div className="w-full sm:w-2/3 lg:w-1/2 bg-white p-6 rounded-lg shadow-lg">
                 {!authUser ? (
                     <div className="flex flex-col justify-start w-full">
                         <p className="text-gray-700 mb-4 text-base">
@@ -219,7 +218,6 @@ const Cart = () => {
                 )}
             </div>
 
-            {/* Order Summary Section */}
             <div className="w-full sm:w-2/3 lg:w-1/3 bg-white p-6 rounded-lg shadow-lg">
                 <h2 className="text-xl font-semibold mb-4 text-black">Order Summary</h2>
                 {itemsList.map((item) => (
@@ -248,10 +246,9 @@ const Cart = () => {
                 </div>
             </div>
 
-            {/* Add Address Modal */}
             {isAddingAddress && (
                 <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50 p-4">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm">
+                    <div className="bg-white p-6 rounded-lg shadow-lg min-w-[300px]">
                         <h3 className="text-lg font-semibold mb-4 text-black">{isEditing ? 'Edit Address' : 'Add New Address'}</h3>
                         {['name', 'street', 'city', 'postalCode', 'phone'].map((field) => (
                             <div key={field} className="mb-4">
@@ -290,7 +287,6 @@ const Cart = () => {
                 </div>
             )}
 
-            {/* Payment Modal */}
             {isPaymentModalOpen && <PaymentModal closeModal={() => setIsPaymentModalOpen(false)} />}
         </div>
     );

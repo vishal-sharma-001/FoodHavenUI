@@ -94,7 +94,7 @@ const Signup = ({ isOpen, onClose }) => {
           </button>
           {error && (
             <p className="text-sm text-red-500 mt-2 text-center">
-              {error} {/* Display the error message below the button */}
+              {error}
             </p>
           )}
         </form>
