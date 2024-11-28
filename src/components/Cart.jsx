@@ -5,10 +5,11 @@ import { addAddress, editAddress, selectAddress} from '../utils/userSlice';
 import { setSelectedRes } from '../utils/restaurantSlice';
 import { FaPlus, FaMinus } from 'react-icons/fa';
 import { BUCKET_PATH } from '../utils/constants';
-import PaymentModal from './PaymentModal';
+import Checkout from './Checkout';
 import Signup from "./Signup";
 import { FOODHAVEN_API } from '../utils/constants';
 const Cart = () => {
+
     const authUser = useSelector((store) => store.user.authUser)
     
     const itemsList = useSelector((store) => store.cart.items);
@@ -97,8 +98,6 @@ const Cart = () => {
         dispatch(selectAddress(address));
     };
 
-    
-
     const addToCart = (prop) => {
         if (selectedRes != null && selectedRes !== prop.restaurantId) {
             dispatch(showClearCartModal(true));
@@ -110,7 +109,7 @@ const Cart = () => {
         if (existingItem) {
             dispatch(addItem({ ...existingItem, quantity: 1 }));
         } else {
-            dispatch(addItem({ id: prop.id, name: prop?.name, price: prop?.price, cloudimageid: prop?.cloudimageid, quantity: 1 }));
+            dispatch(addItem({ id: prop.id, name: prop?.name, price: prop?.price, cloudimageid: prop?.cloudimageid, quantity: 1, restrauntId: prop.restaurantId}));
         }
     };
 
@@ -138,9 +137,8 @@ const Cart = () => {
             </div>
         );
     }
-
     return (
-        <div className="flex justify-center items-start p-6 bg-white flex-wrap gap-3">
+        <div className="flex justify-center items-start p-6 bg-white flex-wrap-reverse gap-3">
             <div className="w-full sm:w-2/3 lg:w-1/2 bg-white p-6 rounded-lg shadow-lg">
                 {!authUser ? (
                     <div className="flex flex-col justify-start w-full">
@@ -221,8 +219,8 @@ const Cart = () => {
             <div className="w-full sm:w-2/3 lg:w-1/3 bg-white p-6 rounded-lg shadow-lg">
                 <h2 className="text-xl font-semibold mb-4 text-black">Order Summary</h2>
                 {itemsList.map((item) => (
-                    <div key={item.id} className="flex justify-between mb-6">
-                        <div className="flex">
+                    <div key={item.id} className="flex justify-between mb-6 flex-wrap">
+                        <div className="flex flex-wrap">
                             <img src={BUCKET_PATH + item.cloudimageid + ".avif"} alt={item.name} className="w-16 h-16 object-cover mr-4" />
                             <div>
                                 <h3 className="font-medium text-black">{item.name}</h3>
@@ -231,7 +229,7 @@ const Cart = () => {
                             </div>
                         </div>
                         <div className="p-2 flex justify-between text-green-900">
-                            <button className="bg-white text-green-900 rounded-xl border-2 w-24 h-10 relative bottom-6">
+                            <button className="bg-white text-green-900 rounded-xl border-2 w-24 h-10 relative">
                                 <div className="p-2 flex justify-between text-green-900">
                                     <FaMinus onClick={() => decreaseQuantity(item?.id)} className="pr-1 cursor-pointer hover:text-green-800" />
                                     <span className="font-medium text-black">{item.quantity}</span>
@@ -287,7 +285,10 @@ const Cart = () => {
                 </div>
             )}
 
-            {isPaymentModalOpen && <PaymentModal closeModal={() => setIsPaymentModalOpen(false)} />}
+            {isPaymentModalOpen && (
+                <Checkout closeModal={() => setIsPaymentModalOpen(false)} totalAmount={totalAmount} itemsList={itemsList}/>
+                )
+            }
         </div>
     );
 };

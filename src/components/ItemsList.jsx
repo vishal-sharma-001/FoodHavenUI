@@ -26,7 +26,7 @@ const ItemsList = ({ prop }) => {
         if (existingItem) {
             dispatch(addItem({ ...existingItem, quantity: 1 }));
         } else {
-            dispatch(addItem({ id: prop.id, name: prop?.name, price: prop?.price, cloudimageid: prop?.cloudimageid, quantity: 1 }));
+            dispatch(addItem({ id: prop.id, name: prop?.name, price: prop?.price, cloudimageid: prop?.cloudimageid, quantity: 1, restrauntId: prop.restaurantId }));
         }
     };
 

@@ -46,7 +46,7 @@ const Header = () => {
     };
 
     return (
-        <div className="fixed top-0 left-0 w-screen z-50 bg-white flex flex-wrap justify-between items-center p-4 shadow-md md:flex-row flex-col">
+        <div className="fixed top-0 left-0 w-screen z-50 bg-white flex flex-wrap justify-between items-center gap-x-2 gap-y-5 lg:px-20 xl:px-60 2xl:px-80 py-2 shadow-md md:flex-row flex-col">
             <Link to="/" className="mb-2 md:mb-0">
                 <img className="object-cover w-[120px] h-[40px] md:w-[150px] md:h-[50px]" src={Logo} alt="FoodHaven logo" />
             </Link>
@@ -72,7 +72,6 @@ const Header = () => {
                     onChange={(e) => setSearchFilter(e.target.value)}
                 />
             </div>
-            <div className="flex items-center">
                 <FaRegUserCircle onClick={handleUserIconClick} className="text-lg md:text-xl mx-4 hover:cursor-pointer" />
                 {isSignupOpen && <Signup isOpen={isSignupOpen} onClose={() => setIsSignupOpen(false)} />}
                 <Link to="/cart" className="relative mx-4">
@@ -83,7 +82,7 @@ const Header = () => {
                         </span>
                     )}
                 </Link>
-            </div>
+
         </div>
     );      
 };

@@ -1,110 +1,119 @@
-import React from 'react';
-import Header from './components/Header';
-import { useEffect} from 'react';
-import { Outlet } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addRestaurants, addFilteredRestaurants, setSelectedCity, setCities} from './utils/restaurantSlice';
-import { FOODHAVEN_API } from './utils/constants';
+import { Outlet } from 'react-router-dom';
+import Header from './components/Header';
+import {
+    addRestaurants,
+    addFilteredRestaurants,
+    setSelectedCity,
+    setCities,
+} from './utils/restaurantSlice';
 import { setAuthUser, setAddresses } from './utils/userSlice';
+import { FOODHAVEN_API } from './utils/constants';
 
 const App = () => {
-    const dispatch = useDispatch()
-    const selectedCity = useSelector((store)=> (store.restaurants.selectedCity))
-    const authUser = useSelector((store) => store.user.authUser)
-    
-    useEffect(() => {
-        fetch(`${FOODHAVEN_API}/public/cities`)
-            .then((res) => {
-                if (res.ok)
-                    return res.json()
-                else
-                    throw new Error("Network response was not ok " + res.statusText);
-            })
-            .then((cities) => {
-                if(cities != null){
-                    dispatch(setCities(cities?.data))
-                    dispatch(setSelectedCity(cities?.data[0]))
-                }
-            })
-            .catch((err) => {
-                console.error("Fetching data failed. " + err)
-            })
+    const dispatch = useDispatch();
+    const selectedCity = useSelector((state) => state.restaurants.selectedCity);
+    const authUser = useSelector((state) => state.user.authUser);
+    const itemsList = useSelector((state) => state.cart.items);
 
+    const fetchCities = async () => {
+        try {
+            const response = await fetch(`${FOODHAVEN_API}/public/cities`);
+            if (!response.ok) throw new Error(`Failed to fetch cities: ${response.statusText}`);
+            const cities = await response.json();
+            if (cities?.data?.length) {
+                dispatch(setCities(cities.data));
+                dispatch(setSelectedCity(cities.data[0]));
+            }
+        } catch (error) {
+            console.error('Error fetching cities:', error);
+        }
+    };
 
-        fetch(`${FOODHAVEN_API}/private/user/getuser`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            credentials: 'include',
-            })   
-        .then((res) => {
-            if (res.ok)
-                return res.json()
-            else
-                throw new Error("Network response was not ok " + res.statusText);
-        })
-        .then((res) => {
-            dispatch(setAuthUser(res))
-        })
-        .catch((err) => {
-            console.error("Fetching data failed. " + err)
-        })
-    
-    }, [])
+    const fetchUser = async () => {
+        try {
+            const response = await fetch(`${FOODHAVEN_API}/private/user/getuser`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+            });
+            if (!response.ok) throw new Error(`Failed to fetch user: ${response.statusText}`);
+            const user = await response.json();
+            dispatch(setAuthUser(user));
+        } catch (error) {
+            console.error('Error fetching user:', error);
+        }
+    };
 
-    useEffect(()=>{
-        if(authUser != null) 
-            fetchUserAddresses()
-    }, [authUser])
-
-
-    useEffect(()=>{
-        if(!selectedCity)
-            return;
-
-        fetch(`${FOODHAVEN_API}/public/restaurants?city=${selectedCity}`)
-            .then((res) => {
-                if (res.ok)
-                    return res.json()
-                else
-                    throw new Error("Network response was not ok " + res.statusText);
-            })
-            .then((res) => {
-                dispatch(addRestaurants(res?.data))
-                dispatch(addFilteredRestaurants(res?.data))
-            })
-            .catch((err) => {
-                console.error("Fetching data failed. " + err)
-            })
-    },[selectedCity])
-
-    const fetchUserAddresses = async () => {
+    const fetchAddresses = async () => {
+        if (!authUser) return;
         try {
             const response = await fetch(`${FOODHAVEN_API}/private/user/getaddresses`, {
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
             });
-    
-            if (!response.ok) {
-                throw new Error('Failed to fetch addresses');
-            }
-    
-            const data = await response.json();
-            dispatch(setAddresses(data));
+            if (!response.ok) throw new Error(`Failed to fetch addresses: ${response.statusText}`);
+            const addresses = await response.json();
+            dispatch(setAddresses(addresses));
         } catch (error) {
             console.error('Error fetching addresses:', error);
         }
     };
 
-    return(
-        <div className="pt-[200px] md:pt-[80px] select-none">
+    const fetchRestaurants = async () => {
+        if (!selectedCity) return;
+        try {
+            const response = await fetch(`${FOODHAVEN_API}/public/restaurants?city=${selectedCity}`);
+            if (!response.ok) throw new Error(`Failed to fetch restaurants: ${response.statusText}`);
+            const restaurants = await response.json();
+            dispatch(addRestaurants(restaurants?.data || []));
+            dispatch(addFilteredRestaurants(restaurants?.data || []));
+        } catch (error) {
+            console.error('Error fetching restaurants:', error);
+        }
+    };
+
+    const syncCart = async () => {
+        if (!itemsList.length) return;
+        try {
+            const response = await fetch(`${FOODHAVEN_API}/private/user/synccart`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ items: itemsList }),
+                credentials: 'include',
+            });
+            if (!response.ok) throw new Error('Failed to sync cart with the database');
+            console.log('Cart successfully synced with the database');
+        } catch (error) {
+            console.error('Error syncing cart:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchCities();
+        fetchUser();
+    }, []);
+
+    useEffect(() => {
+        fetchAddresses();
+    }, [authUser]);
+
+    useEffect(() => {
+        fetchRestaurants();
+    }, [selectedCity]);
+
+    useEffect(() => {
+        syncCart();
+    }, [itemsList]);
+
+    return (
+        <div className="pt-[250px] md:pt-[80px] select-none">
             <Header />
             <Outlet />
         </div>
-   )
-}
+    );
+};
+
 export default App;
