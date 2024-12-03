@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { load } from "@cashfreepayments/cashfree-js"; // Import the 'load' function
-import { FOODHAVEN_API } from "../utils/constants";
 
 const Checkout = ({ closeModal, totalAmount, itemsList }) => {
   const [paymentStatus, setPaymentStatus] = useState("");
@@ -10,7 +9,7 @@ const Checkout = ({ closeModal, totalAmount, itemsList }) => {
   const createOrder = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${FOODHAVEN_API}/private/orders/create`, {
+      const response = await fetch(`/private/orders/create`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -22,7 +21,7 @@ const Checkout = ({ closeModal, totalAmount, itemsList }) => {
       });
 
       if (!response.ok) throw new Error("Error creating order on backend.");
-      
+
       const { paymentSessionId, orderID } = await response.json();
       setOrderId(orderID);
       console.log("Order created successfully");
@@ -58,7 +57,9 @@ const Checkout = ({ closeModal, totalAmount, itemsList }) => {
         setPaymentStatus("Payment error. Please try again.");
       } else if (result.paymentDetails) {
         console.log("Payment completed:", result.paymentDetails);
-        setPaymentStatus(result.paymentDetails.paymentMessage || "Payment successful!");
+        setPaymentStatus(
+          result.paymentDetails.paymentMessage || "Payment successful!"
+        );
       }
     } catch (error) {
       console.error("Checkout error:", error);
@@ -78,7 +79,7 @@ const Checkout = ({ closeModal, totalAmount, itemsList }) => {
   const confirmPayment = async (orderId) => {
     setLoading(true);
     try {
-      const response = await fetch(`${FOODHAVEN_API}/private/orders/confirm/${orderId}`, {
+      const response = await fetch(`/private/orders/confirm/${orderId}`, {
         method: "GET",
         credentials: "include",
       });
@@ -105,7 +106,9 @@ const Checkout = ({ closeModal, totalAmount, itemsList }) => {
   return (
     <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
       <div className="bg-white rounded-lg p-6 max-w-sm w-full">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Checkout</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">
+          Checkout
+        </h2>
         <p className="text-lg text-gray-600 mb-4 text-center">
           Total Amount: ₹{totalAmount}
         </p>

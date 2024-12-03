@@ -18,7 +18,9 @@ const cartSlice = createSlice({
       }
     },
     deleteItem: (state, action) => {
-      const itemIndex = state.items.findIndex((item) => item.id === action.payload);
+      const itemIndex = state.items.findIndex(
+        (item) => item.id === action.payload
+      );
       if (itemIndex !== -1) {
         const item = state.items[itemIndex];
         if (item.quantity > 1) {
@@ -27,7 +29,6 @@ const cartSlice = createSlice({
           state.items.splice(itemIndex, 1);
         }
       }
-      
     },
     clearCart: (state) => {
       state.items = [];
@@ -38,5 +39,6 @@ const cartSlice = createSlice({
   },
 });
 
-export const { addItem, deleteItem, clearCart, showClearCartModal } = cartSlice.actions;
+export const { addItem, deleteItem, clearCart, showClearCartModal } =
+  cartSlice.actions;
 export default cartSlice.reducer;
