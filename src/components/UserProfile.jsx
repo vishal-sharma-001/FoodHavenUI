@@ -225,7 +225,7 @@ const UserProfile = () => {
           )}
         </div>
       ) : (
-        <div className="flex flex-col">
+        <div className="flex flex-col md:flex-wrap gap-4">
           <div>
             <p className="mb-2 text-4xl font-bold">{authUser?.name}</p>
             <div className="flex justify-between flex-wrap gap-2">
@@ -244,7 +244,7 @@ const UserProfile = () => {
               </div>
             </div>
           </div>
-          <div className="flex md:w-5/6 gap-5 rounded-md md:flex-wrap">
+          <div className="flex md:w-5/6 gap-5 rounded-md">
             <div className="md:w-1/4 bg-white p-4 rounded-lg shadow-md border-2">
               <h2 className="text-lg font-semibold mb-4">Options</h2>
               <ul className="space-y-4">

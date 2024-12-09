@@ -5,7 +5,7 @@ import { addAddress, editAddress, selectAddress } from "../utils/userSlice";
 import { setSelectedRes } from "../utils/restaurantSlice";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { BUCKET_PATH } from "../utils/constants";
-import Checkout from "./Checkout";
+import Payment from "./Payment";
 import Signup from "./Signup";
 const Cart = () => {
   const authUser = useSelector((store) => store.user.authUser);
@@ -372,7 +372,7 @@ const Cart = () => {
       )}
 
       {isPaymentModalOpen && (
-        <Checkout
+        <Payment
           closeModal={() => setIsPaymentModalOpen(false)}
           totalAmount={totalAmount}
           itemsList={itemsList}

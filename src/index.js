@@ -10,6 +10,8 @@ import RestaurantMenu from "./components/RestaurantMenu";
 import Cart from "./components/Cart";
 import React from "react";
 import UserProfile from "./components/UserProfile";
+import Payment from "./components/Payment";
+import Return from "./components/Return"; // Import the Return component
 
 const appRouter = createBrowserRouter([
   {
@@ -33,9 +35,18 @@ const appRouter = createBrowserRouter([
         path: "/userprofile",
         element: <UserProfile />,
       },
+      {
+        path: "/checkout", // Add the checkout route
+        element: <Payment />,
+      },
+      {
+        path: "/return", // Add the return route
+        element: <Return />,
+      },
     ],
   },
 ]);
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
