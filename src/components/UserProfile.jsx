@@ -7,10 +7,12 @@ import {
   setAuthUser,
 } from "../utils/userSlice";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { BUCKET_PATH } from "../utils/constants";
 
 import Signup from "./Signup";
 
 const UserProfile = () => {
+  const [orders, setOrders] = useState();
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -204,8 +206,22 @@ const UserProfile = () => {
     }
   };
 
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch(`/private/user/fetchorders`);
+      if (!response.ok)
+        throw new Error(`Failed to fetch cities: ${response.statusText}`);
+      console.log(response);
+      const data = await response.json();
+      console.log(data);
+      setOrders(data);
+    } catch (error) {
+      console.error("Error fetching cities:", error);
+    }
+  };
+
   return (
-    <div className="w-screen h-screen py-6 px-10 md:px-40 bg-white shadow-md text-black">
+    <div className="w-screen h-auto min-h-screen py-6 px-10 md:px-40 bg-white shadow-md text-black">
       {!authUser ? (
         <div className="flex flex-col items-center relative top-[30%]">
           <p className="text-gray-600 mb-4">
@@ -267,15 +283,32 @@ const UserProfile = () => {
                         ? "bg-black text-white"
                         : "text-black bg-gray-200"
                     }`}
-                    onClick={() => setActiveTab("myaccount")}
+                    onClick={() => {
+                      setActiveTab("myaccount");
+                    }}
                   >
                     My Account
+                  </button>
+                </li>
+                <li>
+                  <button
+                    className={`w-full p-2 text-left rounded-lg ${
+                      activeTab === "orders"
+                        ? "bg-black text-white"
+                        : "text-black bg-gray-200"
+                    }`}
+                    onClick={() => {
+                      setActiveTab("orders");
+                      fetchOrders();
+                    }}
+                  >
+                    Orders
                   </button>
                 </li>
               </ul>
             </div>
 
-            <div className="p-6 bg-white rounded-lg shadow-md border-2 w-auto">
+            <div className="p-6 bg-white rounded-lg shadow-md border-2 w-auto min-w-96">
               {activeTab === "addresses" && (
                 <>
                   <h2 className="text-xl font-bold mb-4">Your Addresses</h2>
@@ -341,6 +374,88 @@ const UserProfile = () => {
                   >
                     Edit
                   </button>
+                </div>
+              )}
+              {activeTab === "orders" && (
+                <div className="text-black">
+                  <h2 className="text-xl font-bold mb-4">Your Orders</h2>
+
+                  <div className="mb-4 space-y-4">
+                    {orders && orders.length > 0 ? (
+                      orders.map((order) => {
+                        const isCompleted = order.status === "completed";
+                        const orderStatus = isCompleted
+                          ? "Completed"
+                          : "Failed";
+
+                        return (
+                          <div
+                            key={order.order_id}
+                            className="border border-gray-300 p-4 rounded-md shadow-sm flex flex-col lg:flex-row flex-wrap justify-between"
+                          >
+                            <div className="flex">
+                              <img
+                                src={
+                                  BUCKET_PATH +
+                                  order.items[0]?.cloudimageid +
+                                  ".avif"
+                                }
+                                alt={order.items[0]?.name}
+                                className="w-20 h-20 rounded-md object-cover mr-4"
+                              />
+                              <div>
+                                <h3 className="text-lg font-semibold">
+                                  {
+                                    order.items[0]?.cloudimageid &&
+                                      order.items[0].cloudimageid
+                                        .replace(/[_\s]/g, " ") // Replace underscores with spaces
+                                        .replace(/([a-z])([A-Z])/g, "$1 $2") // Add space before capital letters
+                                        .replace(/\b\w/g, (char) =>
+                                          char.toUpperCase()
+                                        ) // Capitalize each word
+                                  }
+                                </h3>
+                                <ul className="text-sm text-gray-500 mt-2">
+                                  {order.items.map((item, index) => (
+                                    <li key={index}>
+                                      {item.quantity} x {item.name}
+                                    </li>
+                                  ))}
+                                </ul>
+                                <p className="text-sm text-gray-500 mt-2">
+                                  Order Id: #{order.payment_id?.slice(-10)} |
+                                  {" Order Time: "}
+                                  {new Date(
+                                    order.created_at
+                                  ).toLocaleDateString()}{" "}
+                                  {new Date(
+                                    order.created_at
+                                  ).toLocaleTimeString()}
+                                </p>
+                                <p
+                                  className={`text-sm font-semibold ${
+                                    isCompleted
+                                      ? "text-green-600"
+                                      : "text-red-600"
+                                  }`}
+                                >
+                                  Status: {orderStatus}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex flex-col md:items-end mt-4 md:mt-0">
+                              <p className="text-gray-500 text-sm mb-2">
+                                Total Paid: ₹{order.total_amount}
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <p className="text-gray-500">You have no orders yet.</p>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

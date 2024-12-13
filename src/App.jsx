@@ -7,14 +7,18 @@ import {
   addFilteredRestaurants,
   setSelectedCity,
   setCities,
+  setSelectedRes,
 } from "./utils/restaurantSlice";
 import { setAuthUser, setAddresses } from "./utils/userSlice";
+
+import { setCartId, setItems } from "./utils/cartSlice";
 
 const App = () => {
   const dispatch = useDispatch();
   const selectedCity = useSelector((state) => state.restaurants.selectedCity);
   const authUser = useSelector((state) => state.user.authUser);
   const itemsList = useSelector((state) => state.cart.items);
+  const cart_id = useSelector((state) => state.cart.cart_id);
 
   const fetchCities = async () => {
     try {
@@ -42,6 +46,25 @@ const App = () => {
         throw new Error(`Failed to fetch user: ${response.statusText}`);
       const user = await response.json();
       dispatch(setAuthUser(user));
+    } catch (error) {
+      console.error("Error fetching user:", error);
+    }
+  };
+
+  const fetchCart = async () => {
+    try {
+      const response = await fetch(`/private/user/getcart`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+      if (!response.ok)
+        throw new Error(`Failed to fetch user: ${response.statusText}`);
+      const data = await response.json();
+      console.log(data);
+      dispatch(setCartId(data.cart_id));
+      dispatch(setItems(data.items));
+      dispatch(setSelectedRes(data.restaurantid));
     } catch (error) {
       console.error("Error fetching user:", error);
     }
@@ -81,7 +104,7 @@ const App = () => {
   const syncCart = async () => {
     if (!itemsList.length) return;
     try {
-      const response = await fetch(`/private/user/synccart`, {
+      const response = await fetch(`/private/user/synccart/${cart_id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ items: itemsList }),
@@ -101,6 +124,7 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    fetchCart();
     fetchAddresses();
   }, [authUser]);
 
@@ -109,8 +133,13 @@ const App = () => {
   }, [selectedCity]);
 
   useEffect(() => {
-    syncCart();
-  }, [itemsList]);
+    const intervalId = setInterval(() => {
+      syncCart();
+    }, 2000);
+
+    // Cleanup the interval when the component unmounts
+    return () => clearInterval(intervalId);
+  }, [syncCart]); // Only run once on mount and cleanup on unmount
 
   return (
     <div className="pt-[250px] md:pt-[80px] select-none">

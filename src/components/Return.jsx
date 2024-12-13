@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { setItems } from "../utils/cartSlice";
+import { useDispatch } from "react-redux";
 
 const Return = () => {
   const [status, setStatus] = useState(null);
   const [customerEmail, setCustomerEmail] = useState("");
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const queryString = window.location.search;
@@ -27,6 +30,8 @@ const Return = () => {
   }
 
   if (status === "complete") {
+    dispatch(setItems([]))
+
     return (
       <section
         id="success"
@@ -46,7 +51,7 @@ const Return = () => {
               href="mailto:orders@example.com"
               className="text-blue-500 hover:underline"
             >
-              orders@example.com
+              support@example.com
             </a>.
           </p>
           <div className="mt-6">
