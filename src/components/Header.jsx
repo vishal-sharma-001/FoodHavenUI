@@ -43,7 +43,6 @@ const Header = () => {
   );
 
   const handleUserIconClick = () => {
-    console.log(authUser);
     if (authUser) {
       navigate("/userprofile");
     } else {

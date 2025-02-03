@@ -1,1 +1,1 @@
-export const BUCKET_PATH = "https://storage.cloud.google.com/foodhaven_bucket/Images/"
+export const BUCKET_PATH = "https://storage.googleapis.com/foodhaven/Images/Images/"

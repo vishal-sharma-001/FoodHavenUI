@@ -211,9 +211,7 @@ const UserProfile = () => {
       const response = await fetch(`/private/user/fetchorders`);
       if (!response.ok)
         throw new Error(`Failed to fetch cities: ${response.statusText}`);
-      console.log(response);
       const data = await response.json();
-      console.log(data);
       setOrders(data);
     } catch (error) {
       console.error("Error fetching cities:", error);

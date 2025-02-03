@@ -41,7 +41,6 @@ const Signup = ({ isOpen, onClose }) => {
       const data = await response.json();
       if (response.ok) {
         dispatch(setAuthUser(data));
-        console.log("Success:", data);
         onClose();
       } else {
         console.error("Error:", data);

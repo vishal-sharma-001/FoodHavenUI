@@ -19,7 +19,6 @@ const userSlice = createSlice({
       const index = state.addresses.findIndex((address) => address.id === id);
       if (index !== -1) {
         state.addresses[index] = updatedAddress;
-        console.log(state.addresses);
       }
     },
     selectAddress: (state, action) => {

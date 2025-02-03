@@ -9,9 +9,6 @@ import Payment from "./Payment";
 import Signup from "./Signup";
 const Cart = () => {
   const authUser = useSelector((store) => store.user.authUser);
-  useEffect(() => {
-    console.log(authUser);
-  }, []);
   const itemsList = useSelector((store) => store.cart.items);
   const addresses = useSelector((store) => store.user.addresses);
   const selectedAddress = useSelector((store) => store.user.selectedAddress);

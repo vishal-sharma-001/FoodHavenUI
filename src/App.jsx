@@ -61,7 +61,6 @@ const App = () => {
       if (!response.ok)
         throw new Error(`Failed to fetch user: ${response.statusText}`);
       const data = await response.json();
-      console.log(data);
       dispatch(setCartId(data.cart_id));
       dispatch(setItems(data.items));
       dispatch(setSelectedRes(data.restaurantid));
@@ -112,7 +111,6 @@ const App = () => {
       });
       if (!response.ok)
         throw new Error("Failed to sync cart with the database");
-      console.log("Cart successfully synced with the database");
     } catch (error) {
       console.error("Error syncing cart:", error);
     }
@@ -135,7 +133,7 @@ const App = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       syncCart();
-    }, 2000);
+    }, 30000);
 
     // Cleanup the interval when the component unmounts
     return () => clearInterval(intervalId);
