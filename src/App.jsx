@@ -133,7 +133,7 @@ const App = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       syncCart();
-    }, 30000);
+    }, 60000);
 
     // Cleanup the interval when the component unmounts
     return () => clearInterval(intervalId);
