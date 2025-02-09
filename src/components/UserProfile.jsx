@@ -94,22 +94,21 @@ const UserProfile = () => {
     const requiredFields = ["name", "street", "city", "postalCode", "phone"];
     const errors = requiredFields.reduce((acc, field) => {
       if (!newAddress[field]?.trim()) {
-        acc[field] = `${
-          field.charAt(0).toUpperCase() + field.slice(1)
-        } is required.`;
+        acc[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} is required.`;
       }
       return acc;
     }, {});
-
-    if (Object.keys(errors).length > 0) return setFormErrors(errors);
-
+  
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
+  
     try {
       const isEdit = !!newAddress.id;
-      const url = `/private/user/${
-        isEdit ? `editaddress/${newAddress.id}` : "addaddress"
-      }`;
+      const url = `/private/user/${isEdit ? `editaddress/${newAddress.id}` : "addaddress"}`;
       const method = isEdit ? "PUT" : "POST";
-
+  
       const response = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
@@ -123,28 +122,26 @@ const UserProfile = () => {
         }),
         credentials: "include",
       });
-
-      if (!response.ok)
-        throw new Error(
-          (await response.json()).message || "Failed to save address"
-        );
-
-      const data = await response.json();
-
-      if (isEdit) {
-        dispatch(
-          editAddress({
-            id: data.id,
-            updatedAddress: data,
-          })
-        );
-      } else {
-        dispatch(addAddress(data));
+  
+      const data = await response.json(); // Always parse JSON before checking `response.ok`
+      
+      if (!response.ok) {
+        throw new Error(data?.message || "Failed to save address");
       }
-
+  
+      if (data && typeof data === "object") {
+        if (isEdit) {
+          dispatch(editAddress({ id: data.id, updatedAddress: data }));
+        } else {
+          dispatch(addAddress(data));
+        }
+      } else {
+        throw new Error("Invalid response format from server");
+      }
+  
+      // Reset state after successful save
       setNewAddress({
         id: "",
-        user_id: "",
         name: "",
         street: "",
         city: "",
@@ -156,10 +153,7 @@ const UserProfile = () => {
       setIsAddingAddress(false);
       setIsEditing(false);
     } catch (error) {
-      console.error(
-        `Error while ${newAddress.id ? "editing" : "adding"} address:`,
-        error.message
-      );
+      console.error(`Error while ${newAddress.id ? "editing" : "adding"} address:`, error.message);
     }
   };
 
